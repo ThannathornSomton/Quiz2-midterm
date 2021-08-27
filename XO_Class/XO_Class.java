@@ -1,8 +1,7 @@
 public class XO_Class{
 
 
-    public int tableQuantity;
-    //private String[][] board_array = {{" "," "," "},{" "," "," "},{" "," "," "}};
+    private int tableQuantity;
     private String[][] board_array;
     private String player;
     private int turn_count;
@@ -10,17 +9,17 @@ public class XO_Class{
 
     XO_Class() {
     	tableQuantity = 3;
-    	String[][] board_array = new String[tableQuantity][tableQuantity];
-    	//clear_board();
+    	board_array = new String[tableQuantity][tableQuantity];
+    	clear_board();
         player = "X";
         turn_count = 1;
     }
     
     XO_Class(int table) {
     	tableQuantity = table;
-    	String[][] board_array = new String[tableQuantity][tableQuantity];
-    	//clear_board();
-   	player = "X";
+    	board_array = new String[tableQuantity][tableQuantity];
+    	clear_board();
+   	    player = "X";
     	turn_count = 1;
     }
     
@@ -37,7 +36,10 @@ public class XO_Class{
         int count = 0;
         for (int i = 0; i < ((tableQuantity*2)-1);i++){
             if(i%2 == 1) {
-                System.out.println("---------------");
+                for(int j = 0; j<tableQuantity; j++) {
+                    System.out.print("-----");
+                }
+                System.out.println("");
             } else {
                 for (int j = 0; j < tableQuantity; j++) {
                     System.out.print("| "+ board_array[count][j] +" |");
@@ -62,36 +64,69 @@ public class XO_Class{
     }
 
     public boolean check_winner() {
-    boolean isSame = false;
+    boolean isSame = true;
 	for (int i = 0; i < tableQuantity; i++) { //horizontal
+        isSame = true;
 		for (int j = 0; j < tableQuantity-1; j++) {
-			if (board_array[i][j] == board_array[i][j+1]) {
-				isSame = true;
+            if ((board_array[i][j] == board_array[i][j+1]) && (board_array[i][j] == "X" || board_array[i][j] == "Y")) {
+				isSame = isSame & true;
 			}
 			else {
-				isSame = false;
+				isSame = isSame & false;
 			}
 		}
+
+        if (isSame) {
+            System.out.println("Horizontal");
+            return isSame;
+        }
 	}
 	for (int i = 0; i < tableQuantity; i++) { //vertical
+        isSame = true;
 		for (int j = 0; j < tableQuantity-1; j++) {
-			if (board_array[j][i] == board_array[j+1][i]]) {
-				isSame = true;
+			if (board_array[j][i] == board_array[j+1][i] && (board_array[j][i] == "X" || board_array[j][i] == "Y")) {
+				isSame = isSame & true;
 			}
 			else {
-				isSame = false;
+				isSame = isSame & false;
 			}
 		}
+
+        if (isSame) {
+            System.out.println("Vertical");
+            return isSame;
+        }
 	}
-	for(int i = 0;i < tableQuantity -1; i++) {
-		if (board_array[i][i] == board_array[i+1][i+1]]) { // left cross
-			isSame = true;
+    isSame = true;
+	for(int i = 0;i < tableQuantity -1; i++) { // left cross
+		if (board_array[i][i] == board_array[i+1][i+1] && (board_array[i][i] == "X" || board_array[i][i] == "Y")) { 
+			isSame = isSame & true;
 		}
 		else {
-			isSame = false;
-		}		
+			isSame = isSame & false;
+        }
 	}
+    if (isSame) {
+        System.out.println("Left Cross");
+        return isSame;
     }
+
+    isSame = true;
+	for(int i = 0;i < tableQuantity -1; i++) { // right cross
+		if (board_array[i][tableQuantity-1-i] == board_array[i+1][tableQuantity-i-2] && (board_array[i][tableQuantity-1-i] == "X" || board_array[i][tableQuantity-1-i] == "Y")) { 
+			isSame = isSame & true;
+		}
+		else {
+			isSame = isSame & false;
+        }
+		
+	}
+    if (isSame) {
+        System.out.println("Right Cross");
+    }
+    return isSame;
+}
+    
     
     public boolean isAvaliable(int row,int column) {
         if(board_array[row][column] == " ") {
@@ -116,4 +151,9 @@ public class XO_Class{
     public int getTurn_count() {
         return turn_count;
     }
+
+    public int getTableQuantity() {
+        return tableQuantity;
+    }
 }
+

@@ -8,27 +8,12 @@ public class Input_processer {
 
 
     public Input_processer() {
-        xo = new XO_Class();
+
         System.out.println("Phonepad or Numpad");
-        int choice;
-        while(true) {
-            try {
-                choice = Integer.parseInt(console.readLine());
-                if(choice >= 1 && choice <= 2 ) {
-                    if(choice == 1) {
-                        isnumpad = false;
-                    } else {
-                        isnumpad = true;
-                    }
-                    break;
-                } else {
-                    System.out.println("Please input only 1|2");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Please input only 1|2");
-            }
-        }
-        while(xo.getTurn_count() < 10) {
+        isnumpad = truth_input_check(1,2);
+        System.out.println("How many block?");
+        xo = new XO_Class(number_input_check(3,10));
+        while(xo.getTurn_count() < (xo.getTableQuantity() * xo.getTableQuantity())+1) {
             xo.display_board();
             input_checker();
             if(xo.check_winner()) {
@@ -40,7 +25,7 @@ public class Input_processer {
             }
             xo.setTurn_count(xo.getTurn_count()+1);
         }
-        if(xo.getTurn_count() == 10) {
+        if(xo.getTurn_count() == (xo.getTableQuantity() * xo.getTableQuantity())+1) {
             xo.display_board();
             System.out.println("Draw");
         }
@@ -48,28 +33,70 @@ public class Input_processer {
 
     }
 
+    public boolean truth_input_check(int a,int b) {
+        int choice;
+        boolean result;
+        while(true) {
+            try {
+                choice = Integer.parseInt(console.readLine());
+                if(choice >= a && choice <= b ) {
+                    if(choice == 1) {
+                        result = false;
+                    } else {
+                        result = true;
+                    }
+                    break;
+                } else {
+                    System.out.println("Please input only 1|2");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please input only number");
+            }
+        }
+        return result;
+    }
+
+    public int number_input_check(int a,int b) {
+        int choice;
+        int result;
+        while(true) {
+            try {
+                choice = Integer.parseInt(console.readLine());
+                if(choice >= a && choice <= b ) {
+                    result = choice;
+                    break;
+                } else {
+                    System.out.println("that's too much Please input number between " + a + " - " + b);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please input only number");
+            }
+        }
+        return result;
+    }
+
     public void input_checker() {
         int position = 0;
-        System.out.println("Turn " +xo.getTurn_count() + " [" + xo.getPlayer() + "] : Insert your position (1-9)");
+        System.out.println("Turn " +xo.getTurn_count() + " [" + xo.getPlayer() + "] : Insert your position (1-" + (xo.getTableQuantity() * xo.getTableQuantity())+")");
         boolean input_done = false;
         while(!input_done) {
         boolean correct = false;
         while(!correct) {
         try {
             position = Integer.parseInt(console.readLine());
-            if(position >= 1 && position <= 9 ) {
+            if(position >= 1 && position <= (xo.getTableQuantity() * xo.getTableQuantity())) {
                 correct = true;
             } else {
-                System.out.println("Please input only 1-9");
+                System.out.println("Please input only 1-" + (xo.getTableQuantity() * xo.getTableQuantity()));
             }
         } catch (NumberFormatException e) {
-            System.out.println("Wrong input!");
+            System.out.println("Please input only number");
         } 
         }
         if(!isnumpad){
             position -= 1;
-            int row = position/3;
-            int column = position%3;
+            int row = position / xo.getTableQuantity();
+            int column = position % xo.getTableQuantity();
             if(xo.isAvaliable(row, column)){
                 xo.add_position(row, column);
                 input_done = true;
@@ -78,8 +105,8 @@ public class Input_processer {
             }
         }else {
             position = (10-position)-1;
-            int row = position/3;
-            int column = 2-position%3;
+            int row = position / xo.getTableQuantity();
+            int column = 2-position % xo.getTableQuantity();
             if(xo.isAvaliable(row, column)){
                 xo.add_position(row, column);
                 input_done = true;
