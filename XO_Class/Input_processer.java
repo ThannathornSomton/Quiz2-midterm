@@ -77,6 +77,8 @@ public class Input_processer {
 
     public void input_checker() {
         int position = 0;
+        int row;
+        int column;
         System.out.println("Turn " +xo.getTurn_count() + " [" + xo.getPlayer() + "] : Insert your position (1-" + (xo.getTableQuantity() * xo.getTableQuantity())+")");
         boolean input_done = false;
         while(!input_done) {
@@ -91,30 +93,23 @@ public class Input_processer {
             }
         } catch (NumberFormatException e) {
             System.out.println("Please input only number");
+        }
+        position -= 1;
+        if(!isnumpad) {
+            row = position / xo.getTableQuantity();
+            column = position % xo.getTableQuantity();
+        }else {
+            row = (xo.getTableQuantity() - 1) - position / xo.getTableQuantity();
+            column = position % xo.getTableQuantity();
+        }
+        if(xo.isAvaliable(row, column)){
+            xo.add_position(row, column);
+            input_done = true;
+        } else {
+            System.out.println("This position is already added");
         } 
         }
-        if(!isnumpad){
-            position -= 1;
-            int row = position / xo.getTableQuantity();
-            int column = position % xo.getTableQuantity();
-            if(xo.isAvaliable(row, column)){
-                xo.add_position(row, column);
-                input_done = true;
-            } else {
-                System.out.println("This position is already added");
-            }
-        }else {
-            position = (10-position)-1;
-            int row = position / xo.getTableQuantity();
-            int column = 2-position % xo.getTableQuantity();
-            if(xo.isAvaliable(row, column)){
-                xo.add_position(row, column);
-                input_done = true;
-            } else {
-                System.out.println("This position is already added");
-            }
 
-        }
     }
 
 }
